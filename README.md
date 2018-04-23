@@ -5,12 +5,12 @@
 # 支持环境
 windows10
 # 运行截图
-## 运行ExportChrome.bat
+-运行ExportChrome.bat
 ![运行ExportChrome.bat](https://github.com/LDZZDL/BrowserHistory/blob/master/pic/1.png)
-## 导出Excel文件
-- 最近三个月的浏览历史
+- 导出Excel文件
+-- 最近三个月的浏览历史
 
 ![最近三个月的浏览历史](https://github.com/LDZZDL/BrowserHistory/blob/master/pic/2.png)
-- 访问量前100的网址
+-- 访问量前100的网址
 
 ![访问量前100的网址](https://github.com/LDZZDL/BrowserHistory/blob/master/pic/3.png)
