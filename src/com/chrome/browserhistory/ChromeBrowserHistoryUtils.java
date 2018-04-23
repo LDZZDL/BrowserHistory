@@ -28,7 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.sqlite.SQLiteException;
 
-import com.fjdz.browserhistory.test.BrowserHistoryUtilsTest;
+import com.chrome.browserhistory.test.BrowserHistoryUtilsTest;
 
 public class ChromeBrowserHistoryUtils {
 	
