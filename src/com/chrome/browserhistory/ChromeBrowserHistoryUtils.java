@@ -28,8 +28,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.sqlite.SQLiteException;
 
-import com.chrome.browserhistory.test.BrowserHistoryUtilsTest;
-
 public class ChromeBrowserHistoryUtils {
 	
 	/**
@@ -38,40 +36,43 @@ public class ChromeBrowserHistoryUtils {
 	 * @throws IOException
 	 */
 	public void exportChromeBHToExcel(String excelType) throws IOException{
-		Workbook wb = null;
-		if("xls".equals(excelType)){
-			wb = new HSSFWorkbook();
-		}else{
-			wb = new XSSFWorkbook();
-		}
-		Sheet sheetHistory = wb.createSheet("浏览历史");
-		sheetHistory.setColumnWidth(0, 256 * 20);
-		sheetHistory.setColumnWidth(1, 256 * 20);
-		sheetHistory.setColumnWidth(2, 256 * 20);
-		sheetHistory.setColumnWidth(3, 256 * 20);
-		Sheet sheetData = wb.createSheet("统计");
-		sheetData.setColumnWidth(0, 256*20);
-		sheetData.setColumnWidth(1, 256*20);
-		sheetData.setColumnWidth(2, 256*20);
-		Cell cell = null;
-		Row row = null;
-		row = sheetHistory.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellStyle(getCommonCellStyle(cell.getCellStyle()));
 		
-		cell.setCellValue("标题");
-		cell = row.createCell(1);
-		cell.setCellValue("url");
-		cell = row.createCell(2);
-		cell.setCellValue("访问时间");
-		cell = row.createCell(3);
-		cell.setCellValue("停留时间");
 		
 		String chromeSqlite = findChromeCacheLocation();
 		//找不到谷歌浏览器的的缓存位置
 		if(chromeSqlite == null) {
 			System.out.println("找不到Chrome浏览器的缓存位置，请在Chrome浏览器中输入chrome://version查案");
 		}else{
+			
+			Workbook wb = null;
+			if("xls".equals(excelType)){
+				wb = new HSSFWorkbook();
+			}else{
+				wb = new XSSFWorkbook();
+			}
+			Sheet sheetHistory = wb.createSheet("浏览历史");
+			sheetHistory.setColumnWidth(0, 256 * 20);
+			sheetHistory.setColumnWidth(1, 256 * 20);
+			sheetHistory.setColumnWidth(2, 256 * 20);
+			sheetHistory.setColumnWidth(3, 256 * 20);
+			Sheet sheetData = wb.createSheet("统计");
+			sheetData.setColumnWidth(0, 256*20);
+			sheetData.setColumnWidth(1, 256*20);
+			sheetData.setColumnWidth(2, 256*20);
+			Cell cell = null;
+			Row row = null;
+			row = sheetHistory.createRow(0);
+			cell = row.createCell(0);
+			cell.setCellStyle(getCommonCellStyle(cell.getCellStyle()));
+			
+			cell.setCellValue("标题");
+			cell = row.createCell(1);
+			cell.setCellValue("url");
+			cell = row.createCell(2);
+			cell.setCellValue("访问时间");
+			cell = row.createCell(3);
+			cell.setCellValue("停留时间");
+			
 			List<ChromeBrowserHistory> histories = getChromeBrowserHistories(chromeSqlite);
 			int count = histories.size();
 			for(int i = 1; i <= count;i++){
@@ -126,8 +127,8 @@ public class ChromeBrowserHistoryUtils {
 
 			wb.write(outputStream);
 			outputStream.close();
+			wb.close();
 		}
-		wb.close();
 	}
 	
 	/**
@@ -150,13 +151,15 @@ public class ChromeBrowserHistoryUtils {
 		
 		String chromeHistoryLocation = null;
 		//加载类路径下的配置文件
-		InputStream inputStream = BrowserHistoryUtilsTest.class.getResourceAsStream("/history.properties");
+		InputStream inputStream = ChromeBrowserHistoryUtils.class.getResourceAsStream("/history.properties");
 		Properties properties = new Properties();
 		try {
 			properties.load(inputStream);
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			System.out.println("加载history.properties配置文件异常,使用默认路径读取");
+		}
 		if(properties != null){
-			chromeHistoryLocation = properties.getProperty("chrome.history");
+			chromeHistoryLocation = properties.getProperty("chrome.history.location");
 		}
 		if(chromeHistoryLocation == null){
 			//系统名称
@@ -307,7 +310,7 @@ public class ChromeBrowserHistoryUtils {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("缺少Sqlite的驱动程序");
 		} catch (SQLException e) {
-			throw new RuntimeException("连接缓存异常");
+			throw new RuntimeException("Chrome浏览历史缓存位置异常");
 		}
 		return connection;
 	}

@@ -1,4 +1,4 @@
-package com.chrome.browserhistory.test;
+package com.browserhistory.test;
 
 import java.io.IOException;
 import org.junit.Test;
